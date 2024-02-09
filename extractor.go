@@ -52,8 +52,12 @@ func NewExtractor() *Extractor {
 		},
 		{
 			TargetName: "aws_lb",
-			Extact: func(o *tfstate.Object) string {
-				return o.Value.(map[string]interface{})["arn_suffix"].(string)
+			Extract: func(o *tfstate.Object) string {
+				if id := o.Value.(map[string]interface{})["arn_suffix"]; id != nil {
+					return id.(string)
+				}
+
+				return ""
 			},
 		},
 		{
