@@ -43,13 +43,27 @@ func NewExtractor() *Extractor {
 		{
 			TargetName: "aws_cloudfront_distribution",
 			Extract: func(o *tfstate.Object) string {
-				return o.Value.(map[string]interface{})["id"].(string)
+				if id := o.Value.(map[string]interface{})["id"]; id != nil {
+					return id.(string)
+				}
+
+				return ""
+			},
+		},
+		{
+			TargetName: "aws_lb",
+			Extact: func(o *tfstate.Object) string {
+				return o.Value.(map[string]interface{})["arn_suffix"].(string)
 			},
 		},
 		{
 			TargetName: "aws_lb_target_group",
 			Extract: func(o *tfstate.Object) string {
-				return o.Value.(map[string]interface{})["arn_suffix"].(string)
+				if id := o.Value.(map[string]interface{})["id"]; id != nil {
+					return id.(string)
+				}
+
+				return ""
 			},
 		},
 	}
